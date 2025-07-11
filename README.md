@@ -1,5 +1,6 @@
 MeleeMagicCombat
 基于虚幻引擎5开发的第三人称动作RPG战斗系统Demo，展示完整的角色战斗、AI行为、技能系统等核心玩法实现。
+
 视频demo link:https://www.bilibili.com/video/BV17nuTzsEFW/?vd_source=c096d37a6e7624ca39a2afef5c3f64d2
 
 技术特性
@@ -78,24 +79,25 @@ Set Blackboard Value: TargetActor
 Set Blackboard Value: AIState = "Chase"
 
 行为树结构:
-Root → Selector
-├─ Sequence (有目标时)
-│   ├─ Blackboard Decorator (TargetActor存在)
-│   ├─ Move To (Target: TargetActor)
-│   └─ Wait (攻击间隔)
+Root (BlackboardData_Enemy)
+└─ Selector
+├─ Sequence (死亡状态)
+│   ├─ Blackboard Based Condition_IsDeath
+│   │   └─ Blackboard: IsDeath is Set
+│   └─ Wait (50.0s)
+│
+├─ Sequence (发现玩家状态)
+│   ├─ Blackboard Based Condition_IsSeePawn
+│   │   └─ Blackboard: IsSeePawn is Set
+│   ├─ BTTask_AIAttack
+│   └─ Rotate to face BB entry
+│       └─ RotateToFaceBBEntry_SelectActor
+│
 └─ Sequence (巡逻状态)
-├─ Move To (Target: PatrolLocation)
-├─ Wait (巡逻等待)
-└─ Set Blackboard Value (随机巡逻点)
-Root → Selector
-├ Sequence (有目标时)
-│   ├ Blackboard Decorator (TargetActor存在)
-│   ├ Move To (Target: TargetActor)
-│   └ Wait (攻击间隔)
-└ Sequence (巡逻状态)
-├ Move To (Target: PatrolLocation)
-├ Wait (巡逻等待)
-└ Set Blackboard Value (随机巡逻点)
+├─ BTTask_SelectLocation
+│   └─ Key: MoveLocation
+└─ Move To
+└─ MoveTo: MoveLocation
 
 技能系统
 
@@ -157,21 +159,8 @@ Apply Point Damage → 接收Damage Event
 血量为0 → 触发死亡逻辑
 
 开发环境
-引擎版本: Unreal Engine 5.1+
+引擎版本: Unreal Engine 5
 开发语言: Blueprint Visual Scripting
-目标平台: Windows
-项目结构
-MeleeMagicCombat/
-├ Blueprints/
-│   ├ Characters/        角色相关蓝图
-│   ├ AI/               AI控制器和行为树
-│   ├ Skills/           技能系统
-│   └ UI/               用户界面
-├ Content/
-│   ├ Maps/             关卡文件
-│   ├ Animations/       动画资源
-│   └ Effects/          特效资源
-└ DataTables/           技能和配置数据
 
 
 
@@ -254,15 +243,25 @@ Set Blackboard Value: TargetActor
 Set Blackboard Value: AIState = "Chase"
 
 Behavior Tree Structure:
-Root → Selector
-├ Sequence (when target exists)
-│   ├ Blackboard Decorator (TargetActor exists)
-│   ├ Move To (Target: TargetActor)
-│   └ Wait (attack interval)
-└ Sequence (patrol state)
-├ Move To (Target: PatrolLocation)
-├ Wait (patrol wait)
-└ Set Blackboard Value (random patrol point)
+Root (BlackboardData_Enemy)
+└─ Selector
+├─ Sequence (Death)
+│   ├─ Blackboard Based Condition_IsDeath
+│   │   └─ Blackboard: IsDeath is Set
+│   └─ Wait (50.0s)
+│
+├─ Sequence (IsSeePawn)
+│   ├─ Blackboard Based Condition_IsSeePawn
+│   │   └─ Blackboard: IsSeePawn is Set
+│   ├─ BTTask_AIAttack
+│   └─ Rotate to face BB entry
+│       └─ RotateToFaceBBEntry_SelectActor
+│
+└─ Sequence (Patrol)
+├─ BTTask_SelectLocation
+│   └─ Key: MoveLocation
+└─ Move To
+└─ MoveTo: MoveLocation
 
 Skill System
 
@@ -324,223 +323,5 @@ Broadcast health change event to UI
 Health reaches 0 → Trigger death logic
 
 Development Environment
-Engine Version: Unreal Engine 5.1+
+Engine Version: Unreal Engine 5
 Development Language: Blueprint Visual Scripting
-Target Platform: Windows
-Project Structure
-MeleeMagicCombat/
-├ Blueprints/
-│   ├ Characters/        Character-related blueprints
-│   ├ AI/               AI controllers and behavior trees
-│   ├ Skills/           Skill system
-│   └ UI/               User interface
-├ Content/
-│   ├ Maps/             Level files
-│   ├ Animations/       Animation assets
-│   └ Effects/          Effect assets
-└ DataTables/           Skill and configuration data
-
-
-看到你的GitHub显示效果，格式确实有问题。我重新调整格式，确保在GitHub的README.md中正确显示：
-
-```markdown
-# MeleeMagicCombat
-
-基于虚幻引擎5开发的第三人称动作RPG战斗系统Demo，展示完整的角色战斗、AI行为、技能系统等核心玩法实现。
-
-## 技术特性
-
-- 角色控制系统: 第三人称视角控制，支持移动、跳跃、攻击等基础操作
-- 战斗系统: 近战与魔法技能双重战斗模式  
-- AI敌人系统: 基于行为树的智能敌人，支持巡逻、追击、攻击行为
-- 技能系统: 数据驱动的技能配置，包含冷却时间和特效管理
-- 物理交互: 碰撞检测、轨迹计算、延迟特效等
-
-## 核心系统实现
-
-### 1. 角色移动与输入系统
-
-**输入映射配置:**
-```
-使用Enhanced Input System处理输入
-- Input Action: IA_Move (Vector2D)
-- Input Action: IA_Look (Vector2D) 
-- Input Action: IA_Jump (Boolean)
-- Input Action: IA_Attack (Boolean)
-- Input Action: IA_Skill (Boolean)
-```
-
-**角色移动逻辑:**
-```
-Event Tick执行:
-1. Get Control Rotation → Break Rotator → Make Rotator(0, Yaw, 0)
-2. Get Input Axis Vector → Rotate Vector (Forward/Right)
-3. Add Movement Input (World Direction, Scale Value)
-4. Character Movement Component自动处理物理移动
-```
-
-**摄像机控制:**
-```
-鼠标输入处理:
-1. Input Axis Look → Split Struct Pin (X/Y)
-2. Add Controller Yaw Input (X轴)
-3. Add Controller Pitch Input (Y轴, 需Clamp限制角度)
-4. Spring Arm Component自动处理摄像机跟随
-```
-
-### 2. 动画系统
-
-**动画蓝图架构:**
-```
-State Machine主要状态:
-- Idle/Walk/Run (Blend Space 1D: Speed)
-- Jump (Start → Loop → End)
-- Attack (Animation Montage)
-- Skill Cast (Animation Montage with Root Motion)
-```
-
-**移动混合空间:**
-```
-变量更新 (Event Blueprint Update Animation):
-1. Try Get Pawn Owner → Cast to Character
-2. Get Velocity → Vector Length → Speed
-3. Is Falling → 跳跃状态布尔值
-4. 将变量传递给State Machine条件
-```
-
-**攻击动画处理:**
-```
-攻击输入触发:
-1. Input Action IA_Attack → Branch (CanAttack)
-2. Montage Play (AttackMontage)
-3. 设置CanAttack = False
-4. Montage结束事件 → 重置CanAttack = True
-```
-
-### 3. AI敌人系统
-
-**AI Controller配置:**
-```
-BeginPlay执行:
-1. Run Behavior Tree (EnemyBT)
-2. 设置Blackboard Asset
-3. Set Blackboard Value: PatrolLocation (初始位置)
-```
-
-**视野检测系统:**
-```
-Pawn Sensing Component配置:
-- Sight Radius: 1000
-- Sight Angle: 90
-- See Pawns: True
-
-On See Pawn事件:
-1. 检查Sensed Actor是否为玩家
-2. Set Blackboard Value: TargetActor
-3. Set Blackboard Value: AIState = "Chase"
-```
-
-**行为树结构:**
-```
-Root → Selector
-├─ Sequence (有目标时)
-│   ├─ Blackboard Decorator (TargetActor存在)
-│   ├─ Move To (Target: TargetActor)
-│   └─ Wait (攻击间隔)
-└─ Sequence (巡逻状态)
-    ├─ Move To (Target: PatrolLocation)
-    ├─ Wait (巡逻等待)
-    └─ Set Blackboard Value (随机巡逻点)
-```
-
-### 4. 技能系统
-
-**技能数据结构:**
-```
-Struct: SkillData
-- SkillID (Int32)
-- CooldownTime (Float)
-- ManaCost (Float) 
-- EffectClass (Class Reference)
-- AnimMontage (Animation Montage)
-- SkillIcon (Texture 2D)
-```
-
-**技能释放逻辑:**
-```
-技能输入处理:
-1. Input Action → Get Skill Data from DataTable
-2. Branch: 检查冷却时间和蓝量
-3. 如果可用 → Play Animation Montage
-4. 启动Timer: 冷却时间倒计时
-5. Spawn Actor: 技能特效
-6. 扣除蓝量值
-```
-
-**冷却时间管理:**
-```
-技能冷却系统:
-1. 使用Timer Handle数组管理多个技能冷却
-2. Set Timer by Function Name: 每个技能独立计时
-3. UI更新: Get Timer Remaining → 更新进度条
-4. Timer完成 → 技能可用标志重置
-```
-
-### 5. 战斗与碰撞系统
-
-**近战攻击检测:**
-```
-攻击判定:
-1. Animation Notify → 触发碰撞检测
-2. Sphere Trace for Objects (半径: 100, 距离: 200)
-3. ForEach Hit Result → 过滤敌人Actor
-4. Apply Damage (基础伤害 + 随机值)
-5. 播放受击特效和音效
-```
-
-**魔法技能投射物:**
-```
-投射物组件配置:
-1. Projectile Movement Component
-   - Initial Speed: 1000
-   - Max Speed: 1000
-   - Gravity Scale: 0
-2. Sphere Collision Component
-   - Collision Response: Block Dynamic
-3. On Hit Event → Apply Area Damage
-4. Timer Destroy: 生命周期3秒
-```
-
-**伤害计算系统:**
-```
-伤害处理:
-1. Apply Point Damage → 接收Damage Event
-2. 计算最终伤害: BaseDamage * DamageMultiplier
-3. 更新血量: CurrentHP = Clamp(CurrentHP - Damage, 0, MaxHP)
-4. 广播血量变化事件给UI
-5. 血量为0 → 触发死亡逻辑
-```
-
-## 开发环境
-
-- **引擎版本:** Unreal Engine 5.1+
-- **开发语言:** Blueprint Visual Scripting
-- **目标平台:** Windows
-
-## 项目结构
-
-```
-MeleeMagicCombat/
-├─ Blueprints/
-│   ├─ Characters/        # 角色相关蓝图
-│   ├─ AI/               # AI控制器和行为树
-│   ├─ Skills/           # 技能系统
-│   └─ UI/               # 用户界面
-├─ Content/
-│   ├─ Maps/             # 关卡文件
-│   ├─ Animations/       # 动画资源
-│   └─ Effects/          # 特效资源
-└─ DataTables/           # 技能和配置数据
-```
-```
-
