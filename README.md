@@ -79,6 +79,15 @@ Set Blackboard Value: AIState = "Chase"
 
 行为树结构:
 Root → Selector
+├─ Sequence (有目标时)
+│   ├─ Blackboard Decorator (TargetActor存在)
+│   ├─ Move To (Target: TargetActor)
+│   └─ Wait (攻击间隔)
+└─ Sequence (巡逻状态)
+├─ Move To (Target: PatrolLocation)
+├─ Wait (巡逻等待)
+└─ Set Blackboard Value (随机巡逻点)
+Root → Selector
 ├ Sequence (有目标时)
 │   ├ Blackboard Decorator (TargetActor存在)
 │   ├ Move To (Target: TargetActor)
