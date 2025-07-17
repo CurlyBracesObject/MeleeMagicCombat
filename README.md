@@ -188,11 +188,11 @@ Apply Point Damage → 接收Damage Event
 
 ## 项目亮点
 
-✅ **完整第三人称控制架构** - Enhanced Input System + Character Movement Component物理同步  
-✅ **智能AI行为树** - Pawn Sensing + Blackboard状态管理 + 三状态行为切换  
-✅ **数据驱动技能配置** - DataTable + Timer Handle数组 + 实时UI更新  
-✅ **动画事件同步** - Animation Montage + Animation Notify精确触发  
-✅ **物理碰撞系统** - Sphere Trace + Projectile Movement + 特效同步  
+ **完整第三人称控制架构** - Enhanced Input System + Character Movement Component物理同步  
+ **智能AI行为树** - Pawn Sensing + Blackboard状态管理 + 三状态行为切换  
+ **数据驱动技能配置** - DataTable + Timer Handle数组 + 实时UI更新  
+ **动画事件同步** - Animation Montage + Animation Notify精确触发  
+ **物理碰撞系统** - Sphere Trace + Projectile Movement + 特效同步  
 
 ---
 
@@ -386,8 +386,8 @@ Health reaches 0 → Trigger death logic
 
 ## Project Highlights
 
-✅ **Complete Third-Person Control Architecture** - Enhanced Input System + Character Movement Component physics sync  
-✅ **Intelligent AI Behavior Tree** - Pawn Sensing + Blackboard state management + three-state behavior switching  
-✅ **Data-Driven Skill Configuration** - DataTable + Timer Handle array + real-time UI updates  
-✅ **Animation Event Synchronization** - Animation Montage + Animation Notify precise triggering  
-✅ **Physics Collision System** - Sphere Trace + Projectile Movement + effect synchronization
+**Complete Third-Person Control Architecture** - Enhanced Input System + Character Movement Component physics sync  
+**Intelligent AI Behavior Tree** - Pawn Sensing + Blackboard state management + three-state behavior switching  
+**Data-Driven Skill Configuration** - DataTable + Timer Handle array + real-time UI updates  
+**Animation Event Synchronization** - Animation Montage + Animation Notify precise triggering  
+**Physics Collision System** - Sphere Trace + Projectile Movement + effect synchronization
